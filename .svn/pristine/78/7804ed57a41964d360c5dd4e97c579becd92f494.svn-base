@@ -1,0 +1,30 @@
+package brave.webmvc;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+@Configuration
+@EnableWebMvc
+@RestController
+public class Backend {
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@RequestMapping("/api/{name}")
+	public ResponseEntity<String> printDate(@PathVariable("name") String username) {
+		String address = "http://localhost:8083/app/cloud/" + username;
+		System.out.println(address);
+		String result = restTemplate.getForObject(address, String.class);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+}
